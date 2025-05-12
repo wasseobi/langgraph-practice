@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from src import graph
 
 config = {"configurable": {"thread_id": "1"}}
