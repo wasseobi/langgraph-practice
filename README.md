@@ -1,12 +1,16 @@
-### `deploy`
+# 프로젝트 초기화
 
 ```pwsh
 uv sync
 ```
+또는
+```pwsh
+pip install -r requirements.txt
+```
 
-### `.env` 파일 내용
+# 환경 변수 파일 작성
 
-사용할 모델 이름과 해당 LLM 제공자의 API 키를 설정합니다.
+`.env` 파일에 사용할 모델 이름과 해당 LLM 제공자의 API 키를 설정합니다.
 ```
 DEFAULT_MODEL = <model_name>
 
