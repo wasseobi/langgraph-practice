@@ -48,8 +48,8 @@ builder.add_edge("parse_intent", "generate_reply")
 # 응답 생성 -> 대화 저장
 builder.add_edge("generate_reply", "save_dialogue")
 
-# 대화 저장 -> 작업 판단
-builder.add_edge("save_dialogue", "task_decision")
+# 대화 저장 -> 작업 판단 (무한 루프 방지 위해 삭제)
+# builder.add_edge("save_dialogue", "task_decision")
 
 # 작업 판단 -> 조건부 분기 (작업 실행 또는 종료)
 builder.add_conditional_edges(
@@ -60,11 +60,9 @@ builder.add_conditional_edges(
 
 # 작업 실행 -> 결과 응답 생성
 builder.add_edge("execute_action", "generate_reply")
-
-# 결과를 포함한 응답에서 대화 저장으로
+# 결과 응답 생성 -> 대화 저장
 builder.add_edge("generate_reply", "save_dialogue")
-
-# 최종 저장 후 종료
+# 대화 저장 -> END
 builder.add_edge("save_dialogue", END)
 
 """ 그래프 컴파일 """

@@ -21,10 +21,10 @@ def save_dialogue(state: ChatState) -> Dict:
         "user_id": state["user_id"],
         "user_input": state["user_input"],
         "parsed_intent": state["parsed_intent"] if isinstance(state["parsed_intent"], dict) else {},
-        "system_reply": state["reply"] if "reply" in state else "",
-        "action_required": state["action_required"] if "action_required" in state else False,
-        "executed_result": state["executed_result"] if "executed_result" in state else {},
-        "messages": [msg.dict() if hasattr(msg, 'dict') else msg for msg in state["messages"]] if state["messages"] else []
+        "system_reply": state.get("reply", ""),
+        "action_required": state.get("action_required", False),
+        "executed_result": state.get("executed_result", {}),
+        "messages": [msg.dict() if hasattr(msg, 'dict') else msg for msg in state.get("messages", [])] if state.get("messages") else []
     }
     
     try:

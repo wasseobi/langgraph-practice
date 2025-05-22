@@ -40,7 +40,12 @@ class ChatState:
     def __getitem__(self, key: str) -> Any:
         """상태 값을 조회합니다."""
         if not isinstance(key, str):
-            raise TypeError("키는 문자열이어야 합니다")
+            import traceback
+            print(f"[ChatState] 잘못된 key 접근: {key!r} (type: {type(key)})")
+            print(f"[ChatState] 현재 keys: {self.VALID_KEYS}")
+            print("[ChatState] 스택 트레이스:")
+            traceback.print_stack()
+            raise TypeError(f"키는 문자열이어야 합니다. (입력값: {key!r}, 타입: {type(key)})")
         if key not in self.VALID_KEYS:
             raise KeyError(f"존재하지 않는 키입니다: {key}")
         return getattr(self, key)
@@ -48,7 +53,7 @@ class ChatState:
     def __setitem__(self, key: str, value: Any) -> None:
         """상태 값을 설정합니다."""
         if not isinstance(key, str):
-            raise TypeError("키는 문자열이어야 합니다")
+            raise TypeError(f"키는 문자열이어야 합니다. (입력값: {key!r}, 타입: {type(key)})")
         if key not in self.VALID_KEYS:
             raise KeyError(f"존재하지 않는 키입니다: {key}")
         setattr(self, key, value)

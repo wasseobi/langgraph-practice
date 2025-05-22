@@ -31,12 +31,16 @@ def google_search(query: str, num_results: int = 3) -> List[Dict[str, str]]:
     try:
         api_key = os.getenv('GOOGLE_API_KEY')
         cse_id = os.getenv('GOOGLE_CSE_ID')
-        
+        if not api_key or not cse_id:
+            return [{"error": "환경 변수 GOOGLE_API_KEY 또는 GOOGLE_CSE_ID가 비어 있습니다."}]
+        if not isinstance(query, str):
+            return [{"error": f"검색어(query)는 문자열이어야 합니다. 현재 타입: {type(query)}"}]
+        if not isinstance(num_results, int):
+            return [{"error": f"num_results는 int여야 합니다. 현재 타입: {type(num_results)}"}]
         search = GoogleSearchAPIWrapper(
             google_api_key=api_key,
             google_cse_id=cse_id
         )
-        
         results = search.results(query, num_results=num_results)
         return results
         
@@ -81,23 +85,11 @@ def schedule_meeting(
             "error": str(e)
         }
 
-# 도구 객체 생성
+# 도구 객체 리스트 (Tool.from_function 제거, 데코레이터 기반 자동 수집)
 tools = [
-    Tool.from_function(
-        func=what_time_is_it,
-        name="current_time",
-        description="현재 시간을 HH:MM:SS 형식으로 반환"
-    ),
-    Tool.from_function(
-        func=google_search,
-        name="google_search",
-        description="Google 검색을 수행하고 결과를 반환"
-    ),
-    Tool.from_function(
-        func=schedule_meeting,
-        name="schedule_meeting",
-        description="회의 일정을 등록하고 회의 정보를 반환"
-    )
+    what_time_is_it,
+    google_search,
+    schedule_meeting
 ]
 
 def get_tools():
