@@ -16,7 +16,17 @@ def task_decision(state: ChatState) -> Dict:
     intent = parsed_intent["intent"] if isinstance(parsed_intent, dict) else ""
     params = parsed_intent.get("params", {}) if isinstance(parsed_intent, dict) else {}
 
+    # float 타입 파라미터 방어: num_results 등은 int로 변환
+    if "num_results" in params and isinstance(params["num_results"], float):
+        print(f"[task_decision] num_results(float) → int 변환: {params['num_results']} → {int(params['num_results'])}")
+        params["num_results"] = int(params["num_results"])
+        parsed_intent["params"] = params  # 반드시 state에 반영
+        state["parsed_intent"] = parsed_intent
+
+    print(f"[task_decision] intent: {intent!r}, action_required: {intent in ACTION_REQUIRED_INTENTS}")
+
     if intent in ACTION_REQUIRED_INTENTS:
+        print(f"[task_decision] action_required: True (intent: {intent})")
         return {
             "action_required": True,
             "tool_info": {
@@ -24,6 +34,7 @@ def task_decision(state: ChatState) -> Dict:
                 "input": params
             }
         }
+    print(f"[task_decision] action_required: False (intent: {intent})")
     # 작업이 필요없는 경우
     return {
         "action_required": False,
